@@ -1,3 +1,3 @@
-import { TProduct } from "./interfaces";
+import { IProduct } from "./interfaces";
 
-export const market: Array<TProduct> = [];
+export const market: Array<IProduct> = [];

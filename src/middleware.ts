@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { market } from "./database";
-import { TCleaningProduct, TFoodProduct } from "./interfaces";
+import { ICleaningProduct, IFoodProduct } from "./interfaces";
 
 export const ensureProductMiddlewaresById = (
     req: Request,
@@ -13,7 +13,7 @@ export const ensureProductMiddlewaresById = (
   
     if (findIndex === -1) {
       return res.status(404).json({
-        error: "Product not found",
+        "error": "Product not found"
       });
     }
   
@@ -31,13 +31,13 @@ export const ensureProductMiddlewaresById = (
     res: Response,
     next: NextFunction
   ) => {
-    const productsData: Array<TCleaningProduct | TFoodProduct> = req.body;
+    const productsData: Array<ICleaningProduct | IFoodProduct> = req.body;
   
     productsData.forEach((product) => {
       market.forEach((productName) => {
         if (product.name === productName.name) {
           return res.status(409).json({
-            error: "Product already registered",
+            "error": "Product already registered"
           });
         }
       });
@@ -52,10 +52,10 @@ export const ensureProductMiddlewaresById = (
     res: Response,
     next: NextFunction
   ) => {
-    const productsData: Array<TCleaningProduct | TFoodProduct> = req.body;
+    const productsData: Array<ICleaningProduct | IFoodProduct> = req.body;
   
   
-    const patchDuplicated = market.some(product => product.name === (productsData as Array<TCleaningProduct | TFoodProduct> | any).name);
+    const patchDuplicated = market.some(product => product.name === (productsData as Array<ICleaningProduct | IFoodProduct> | any).name);
   
   if (patchDuplicated){
     return res.status(409).json({error: "Product already registered"});
