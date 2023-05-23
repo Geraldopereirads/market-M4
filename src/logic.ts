@@ -11,7 +11,9 @@ export const createProducts = (req: Request, res: Response): Response => {
     (acc, product) => acc + product.price,
     0
   );
+
   const newProducts: IProduct[] = [];
+
   productsData.map((product) => {
     const newProduct: IProduct = {
       id: nextId++,
@@ -31,17 +33,45 @@ export const createProducts = (req: Request, res: Response): Response => {
 };
 
 export const findProducts = (req: Request, res: Response): Response => {
-  return res.status(201).json("Achei");
+  const section: any | string = req.query.section;
+
+  const total: number = market.reduce((acc, product) => acc + product.price, 0);
+  if (!section) {
+    return res.status(200).json({
+      total: total,
+      marketProducts: market,
+    });
+  }
+
+  const productFilter: IProduct[] = market.filter(
+    (product) => product.section === section
+  );
+
+  return res.json(productFilter);
 };
 
 export const findProductsById = (req: Request, res: Response): Response => {
-  return res.status(201).json("achei o id");
+  const index = res.locals.market.productIndex;
+
+  return res.json(market[index]);
 };
 
 export const updateProductsById = (req: Request, res: Response): Response => {
-  return res.status(201).json("achei o id");
+  const index: string | any = res.locals.market.productIndex;
+  const updateData: string | any = req.body;
+
+  market[index] = {
+    ...market[index],
+    ...updateData,
+  };
+
+  return res.json(market[index]);
 };
 
 export const deleteProductsById = (req: Request, res: Response): Response => {
-  return res.status(201).json("achei o id");
+  const index = res.locals.market.productIndex;
+
+  market.splice(index, 1);
+
+  return res.status(204).send();
 };
